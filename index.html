@@ -1,21 +1,17 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>Cours Or, Argent et Devises</title>
-<style>
-  body { font-family: Arial, sans-serif; margin: 0; padding: 10px; }
-  h2 { background: #f4f4f4; padding: 10px; border-radius: 6px; }
-  iframe { width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; }
-</style>
-</head>
-<body>
+<div id="stock-price">Chargement du cours...</div>
 
-<h2>Cours de l'or et de l'argent</h2>
-<iframe src="https://www.goldbroker.fr/cours/or" height="500"></iframe>
+<script>
+  const apiKey = 'UFFVDAQATTIP2I2I';  // Remplace par ta clé API Alpha Vantage
+  const symbol = 'AAPL';
 
-<h2>Devises principales en direct</h2>
-<iframe src="https://fr.investing.com/currencies/live-currency-cross-rates" height="600"></iframe>
-
-</body>
-</html>
+  fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`)
+    .then(response => response.json())
+    .then(data => {
+      const price = data["Global Quote"]["05. price"];
+      document.getElementById('stock-price').innerText = `Cours actuel de ${symbol} : ${price} USD`;
+    })
+    .catch(err => {
+      document.getElementById('stock-price').innerText = "Erreur lors du chargement des données.";
+      console.error(err);
+    });
+</script>
