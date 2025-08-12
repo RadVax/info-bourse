@@ -1,17 +1,83 @@
-<div id="stock-price">Chargement du cours...</div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Actualités Métaux Précieux & Devises</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 0 15px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    #news > div {
+      border-bottom: 1px solid #ccc;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+    }
+    #news h3 {
+      margin: 0 0 5px;
+      font-size: 1.2em;
+    }
+    #news a {
+      text-decoration: none;
+      color: #007acc;
+    }
+    #news a:hover {
+      text-decoration: underline;
+    }
+    #news p {
+      margin: 0 0 8px;
+      color: #555;
+    }
+    #news small {
+      color: #999;
+    }
+  </style>
+</head>
+<body>
 
-<script>
-  const apiKey = 'UFFVDAQATTIP2I2I';  // Remplace par ta clé API Alpha Vantage
-  const symbol = 'AAPL';
+  <h1>Dernières actualités - Métaux Précieux & Devises</h1>
+  <div id="news">Chargement des actualités...</div>
 
-  fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`)
-    .then(response => response.json())
-    .then(data => {
-      const price = data["Global Quote"]["05. price"];
-      document.getElementById('stock-price').innerText = `Cours actuel de ${symbol} : ${price} USD`;
-    })
-    .catch(err => {
-      document.getElementById('stock-price').innerText = "Erreur lors du chargement des données.";
-      console.error(err);
-    });
-</script>
+  <script>
+    const apiKey = '5odQLciJEUvTdTfF0B6JcER28M7jcOCG'; // ← Remplace par ta clé API ici
+    const tickers = 'GOLD,SLV,USO,USDJPY'; // métaux précieux et devises populaires
+    const url = `https://financialmodelingprep.com/api/v3/stock_news?tickers=${tickers}&limit=5&apikey=${apiKey}`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const newsContainer = document.getElementById('news');
+        newsContainer.innerHTML = '';
+
+        if (!data.length) {
+          newsContainer.innerHTML = '<p>Aucune actualité trouvée.</p>';
+          return;
+        }
+
+        data.forEach(article => {
+          const div = document.createElement('div');
+          div.innerHTML = `
+            <h3><a href="${article.url}" target="_blank" rel="noopener noreferrer">${article.title}</a></h3>
+            <p>${article.text || ''}</p>
+            <small>${new Date(article.date).toLocaleString()}</small>
+          `;
+          newsContainer.appendChild(div);
+        });
+      })
+      .catch(err => {
+        document.getElementById('news').innerHTML = '<p>Erreur lors du chargement des actualités.</p>';
+        console.error(err);
+      });
+  </script>
+
+</body>
+</html>
